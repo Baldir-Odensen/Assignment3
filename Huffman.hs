@@ -19,7 +19,7 @@ type BitCode = [Bool]
 {- characterCountsAux str char acc
    Counts how many times a character occurs i a string.
    PRE: acc >= 0
-   RETURNS: acc of how many times char occurs in str.
+   RETURNS: acc of how many times specified char occurs in str.
    EXAMPLES:
 -}
 characterCountsAux :: String -> Char -> Int -> Int
@@ -34,13 +34,18 @@ characterCountsAux (x:xs) y acc | y == x = 1 + characterCountsAux xs y acc
  -}
 characterCounts :: String -> Table Char Int
 characterCounts [] = Table.empty
-characterCounts (x:xs) = undefined
+characterCounts (x:xs) = Table.insert (characterCounts xs) x (characterCountsAux (x:xs) x 0)
 
 
--- modify and add comments as needed
-data HuffmanTree = HuffmanTree ()
+{- modify and add comments as needed
+ - 
+ INVARIANTS: 
+-}
+data HuffmanTree = Void
+                 | Leaf Char Int HuffmanTree HuffmanTree
+                 | Node Int HuffmanTree HuffmanTree
 
-
+ht = Node 3 (Leaf 'a' 3 Void Void) Void
 {- huffmanTree t
    PRE:  t maps each key to a positive value
    RETURNS: a Huffman tree based on the character counts in t
