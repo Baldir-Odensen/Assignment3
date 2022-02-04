@@ -20,7 +20,9 @@ type BitCode = [Bool]
    Counts how many times a character occurs i a string.
    PRE: acc >= 0
    RETURNS: acc of how many times specified char occurs in str.
-   EXAMPLES:
+   EXAMPLES: characterCountsAux "" 'h' 0         == 0
+             characterCountsAux "hej hopp" 'h' 0 == 2
+             characterCountsAux "hej hopp" 'o' 0 == 1
 -}
 characterCountsAux :: String -> Char -> Int -> Int
 characterCountsAux [] _ acc = acc
@@ -30,29 +32,62 @@ characterCountsAux (x:xs) y acc | y == x = 1 + characterCountsAux xs y acc
 {- characterCounts s
    RETURNS: a table that maps each character that occurs in s to the number of
          times the character occurs in s
-   EXAMPLES:
+   EXAMPLES: characterCounts "" == T []
+             characterCounts "hej hopp" == T [('p',2),('o',1),('h',2),(' ',1),('j',1),('e',1)]
+             characterCounts "this is an example of a huffman tree" == T [('e',4),('r',1),('t',2),(' ',7),('n',2),('a',4),('m',2),('f',3),('u',1),('h',2),('o',1),('l',1),('p',1),('x',1),('s',2),('i',2)]
  -}
 characterCounts :: String -> Table Char Int
 characterCounts [] = Table.empty
 characterCounts (x:xs) = Table.insert (characterCounts xs) x (characterCountsAux (x:xs) x 0)
 
 
-{- modify and add comments as needed
- - 
- INVARIANTS: 
+{- HuffmanTree - full binary tree such that
+ - each leaf is labeled with a unique character.
+ - each sub-tree (i.e., each leaf and each node) is labeled with the count of all characters
+   in that sub-tree.
+ INVARIANTS: sub-trees with larger character counts do not occur at a lower level of the tree than sub-trees with smaller character counts.
 -}
 data HuffmanTree = Void
                  | Leaf Char Int HuffmanTree HuffmanTree
-                 | Node Int HuffmanTree HuffmanTree
+                 | Node Int HuffmanTree HuffmanTree deriving Show
 
 ht = Node 3 (Leaf 'a' 3 Void Void) Void
-{- huffmanTree t
-   PRE:  t maps each key to a positive value
-   RETURNS: a Huffman tree based on the character counts in t
+
+{- iterateT table
+   
+   PRE:
+   RETURNS:
+   EXAMPLES:
+-}
+iterateT :: Table Char Int -> [(Char,Int)]
+iterateT t = Table.iterate t (\y x -> x : y) []
+
+{- priorityQ lst
+   
+   PRE:
+   RETURNS:
+   EXAMPLES:
+-}
+priorityQ :: [(Char,Int)] -> PriorityQueue HuffmanTree
+priorityQ [] = PriorityQueue.empty
+priorityQ (x:xs) = PriorityQueue.insert (priorityQ xs) ((Leaf (fst x) (snd x) Void Void),(snd x))
+
+{- rearrangeQ pq
+   
+   PRE:
+   RETURNS:
+   EXAMPLES:
+-}
+rearrangeQ :: PriorityQueue HuffmanTree -> PriorityQueue HuffmanTree
+rearrangeQ pq = undefined
+
+{- huffmanTree table
+   PRE:  table maps each key to a positive value
+   RETURNS: a Huffman tree based on the character counts in table
    EXAMPLES:
  -}
 huffmanTree :: Table Char Int -> HuffmanTree
-huffmanTree = undefined
+huffmanTree t = undefined
 
 
 {- codeTable h
