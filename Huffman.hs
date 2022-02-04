@@ -16,6 +16,16 @@ type BitCode = [Bool]
 -- END OF DO NOT MODIFY ZONE
 
 --------------------------------------------------------------------------------
+{- characterCountsAux str char acc
+   Counts how many times a character occurs i a string.
+   PRE: acc >= 0
+   RETURNS: acc of how many times char occurs in str.
+   EXAMPLES:
+-}
+characterCountsAux :: String -> Char -> Int -> Int
+characterCountsAux [] _ acc = acc
+characterCountsAux (x:xs) y acc | y == x = 1 + characterCountsAux xs y acc
+                                | otherwise = characterCountsAux xs y acc
 
 {- characterCounts s
    RETURNS: a table that maps each character that occurs in s to the number of
@@ -23,7 +33,8 @@ type BitCode = [Bool]
    EXAMPLES:
  -}
 characterCounts :: String -> Table Char Int
-characterCounts = undefined
+characterCounts [] = Table.empty
+characterCounts (x:xs) = undefined
 
 
 -- modify and add comments as needed
