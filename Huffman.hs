@@ -48,39 +48,54 @@ characterCounts (x:xs) = Table.insert (characterCounts xs) x (characterCountsAux
  INVARIANTS: sub-trees with larger character counts do not occur at a lower level of the tree than sub-trees with smaller character counts.
 -}
 data HuffmanTree = Void
-                 | Leaf Char Int HuffmanTree HuffmanTree
+                 | Leaf Char Int
                  | Node Int HuffmanTree HuffmanTree deriving Show
 
 {- priorityQ lst
-   
-   PRE:
-   RETURNS:
+   Creates a PriorityQueue out of a specified list of tuples.
+   RETURNS: PriorityQueue from lst
    EXAMPLES:
 -}
 priorityQ :: [(Char,Int)] -> PriorityQueue HuffmanTree
+-- VARIANT: length lst
 priorityQ [] = PriorityQueue.empty
-priorityQ (x:xs) = PriorityQueue.insert (priorityQ xs) (Leaf (fst x) (snd x) Void Void,snd x)
+priorityQ (x:xs) = PriorityQueue.insert (priorityQ xs) (Leaf (fst x) (snd x),snd x)
 
-{- mergeQ pq
-   
-   PRE:
-   RETURNS:
+{- mergeQ pq acc
+   Merges all of the trees in a specified PriorityQueue into one tree based on their priority.
+   RETURNS: pg with only one tree containing all previous trees
    EXAMPLES:
 -}
-mergeQ :: PriorityQueue HuffmanTree -> PriorityQueue HuffmanTree
-mergeQ pq = let a = PriorityQueue.least
-                b = fst (PriorityQueue.least pq)
-                c = snd (PriorityQueue.least pq)
-                d = snd (fst (PriorityQueue.least pq)) + snd(fst (PriorityQueue.least (snd (PriorityQueue.least pq))))
-            in PriorityQueue.insert (snd(a c)) (Node d (fst b) (fst(fst(a c))),d)
+mergeQ :: PriorityQueue HuffmanTree -> Int -> PriorityQueue HuffmanTree
+-- VARIANT: acc-1
+mergeQ pq 0 = pq
+mergeQ pq acc = let a = PriorityQueue.least
+                    b = fst (PriorityQueue.least pq)
+                    c = snd (PriorityQueue.least pq)
+                    d = snd (fst (PriorityQueue.least pq)) + snd(fst (PriorityQueue.least (snd (PriorityQueue.least pq))))
+                in  mergeQ (PriorityQueue.insert (snd(a c)) (Node d (fst b) (fst(fst(a c))),d)) (acc-1)
+
+{- sizeQ pg
+   Calculates how many trees there are in a specified queue.
+   RETURNS: Int of how many trees in pq
+   EXAMPLES:
+-}
+sizeQ :: PriorityQueue HuffmanTree -> Int
+-- VARIANT: length of queue
+sizeQ pq = if is_empty (snd (PriorityQueue.least pq))
+            then 0
+            else 1 + sizeQ (snd (PriorityQueue.least pq))
+
+x = priorityQ (Table.iterate (characterCounts "this is an example of a huffman tree")(\y x -> x : y) [])
 
 {- huffmanTree table
+   Creates a HuffmanTree from a table.
    PRE:  table maps each key to a positive value
    RETURNS: a Huffman tree based on the character counts in table
    EXAMPLES:
  -}
 huffmanTree :: Table Char Int -> HuffmanTree
-huffmanTree t = fst(fst(PriorityQueue.least (mergeQ(priorityQ (Table.iterate t (\y x -> x : y) [])))))
+huffmanTree t = fst(fst(PriorityQueue.least (mergeQ (priorityQ (reverse(Table.iterate t (\y x -> x : y) [])))(sizeQ (priorityQ (reverse(Table.iterate t (\y x -> x : y) [])))))))
 
 
 {- codeTable h
