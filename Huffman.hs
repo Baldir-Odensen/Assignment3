@@ -70,7 +70,7 @@ iterateT t = Table.iterate t (\y x -> x : y) []
 -}
 priorityQ :: [(Char,Int)] -> PriorityQueue HuffmanTree
 priorityQ [] = PriorityQueue.empty
-priorityQ (x:xs) = PriorityQueue.insert (priorityQ xs) ((Leaf (fst x) (snd x) Void Void),(snd x))
+priorityQ (x:xs) = PriorityQueue.insert (priorityQ xs) (Leaf (fst x) (snd x) Void Void,snd x)
 
 {- rearrangeQ pq
    
@@ -79,7 +79,11 @@ priorityQ (x:xs) = PriorityQueue.insert (priorityQ xs) ((Leaf (fst x) (snd x) Vo
    EXAMPLES:
 -}
 rearrangeQ :: PriorityQueue HuffmanTree -> PriorityQueue HuffmanTree
-rearrangeQ pq = undefined
+rearrangeQ pq = let a = PriorityQueue.least
+                    b = fst (PriorityQueue.least pq)
+                    c = snd (PriorityQueue.least pq)
+                    d = snd (fst (PriorityQueue.least pq)) + snd(fst (PriorityQueue.least (snd (PriorityQueue.least pq))))
+                in PriorityQueue.insert (snd(a c)) (Node d (fst b) (fst(fst(a c))),d)
 
 {- huffmanTree table
    PRE:  table maps each key to a positive value
