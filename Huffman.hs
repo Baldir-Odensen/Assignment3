@@ -72,18 +72,18 @@ priorityQ :: [(Char,Int)] -> PriorityQueue HuffmanTree
 priorityQ [] = PriorityQueue.empty
 priorityQ (x:xs) = PriorityQueue.insert (priorityQ xs) (Leaf (fst x) (snd x) Void Void,snd x)
 
-{- rearrangeQ pq
+{- mergeQ pq
    
    PRE:
    RETURNS:
    EXAMPLES:
 -}
-rearrangeQ :: PriorityQueue HuffmanTree -> PriorityQueue HuffmanTree
-rearrangeQ pq = let a = PriorityQueue.least
-                    b = fst (PriorityQueue.least pq)
-                    c = snd (PriorityQueue.least pq)
-                    d = snd (fst (PriorityQueue.least pq)) + snd(fst (PriorityQueue.least (snd (PriorityQueue.least pq))))
-                in PriorityQueue.insert (snd(a c)) (Node d (fst b) (fst(fst(a c))),d)
+mergeQ :: PriorityQueue HuffmanTree -> PriorityQueue HuffmanTree
+mergeQ pq = let a = PriorityQueue.least
+                b = fst (PriorityQueue.least pq)
+                c = snd (PriorityQueue.least pq)
+                d = snd (fst (PriorityQueue.least pq)) + snd(fst (PriorityQueue.least (snd (PriorityQueue.least pq))))
+            in PriorityQueue.insert (snd(a c)) (Node d (fst b) (fst(fst(a c))),d)
 
 {- huffmanTree table
    PRE:  table maps each key to a positive value
@@ -91,7 +91,7 @@ rearrangeQ pq = let a = PriorityQueue.least
    EXAMPLES:
  -}
 huffmanTree :: Table Char Int -> HuffmanTree
-huffmanTree t = undefined
+huffmanTree t = fst(fst(PriorityQueue.least (mergeQ(priorityQ (Table.iterate t (\y x -> x : y) [])))))
 
 
 {- codeTable h
