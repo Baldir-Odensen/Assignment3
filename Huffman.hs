@@ -51,17 +51,6 @@ data HuffmanTree = Void
                  | Leaf Char Int HuffmanTree HuffmanTree
                  | Node Int HuffmanTree HuffmanTree deriving Show
 
-ht = Node 3 (Leaf 'a' 3 Void Void) Void
-
-{- iterateT table
-   
-   PRE:
-   RETURNS:
-   EXAMPLES:
--}
-iterateT :: Table Char Int -> [(Char,Int)]
-iterateT t = Table.iterate t (\y x -> x : y) []
-
 {- priorityQ lst
    
    PRE:
