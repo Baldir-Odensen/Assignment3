@@ -86,7 +86,7 @@ sizeQ pq = if is_empty (snd (PriorityQueue.least pq))
             then 0
             else 1 + sizeQ (snd (PriorityQueue.least pq))
 
-x = priorityQ (Table.iterate (characterCounts "this is an example of a huffman tree")(\y x -> x : y) [])
+x = characterCounts "this is an example of a huffman tree"
 
 {- huffmanTree table
    Creates a HuffmanTree from a table.
@@ -97,13 +97,25 @@ x = priorityQ (Table.iterate (characterCounts "this is an example of a huffman t
 huffmanTree :: Table Char Int -> HuffmanTree
 huffmanTree t = fst(fst(PriorityQueue.least (mergeQ (priorityQ (reverse(Table.iterate t (\y x -> x : y) [])))(sizeQ (priorityQ (reverse(Table.iterate t (\y x -> x : y) [])))))))
 
+{- codeTableAux
+   
+   PRE:
+   RETURNS:
+   EXAMPLES:
+-}
+codeTableAux :: HuffmanTree -> Bool -> BitCode
+codeTableAux Void _ = []
+codeTableAux (Node _ l r) z = undefined
+codeTableAux (Leaf x y) z = undefined
 
 {- codeTable h
    RETURNS: a table that maps each character in h to its Huffman code
    EXAMPLES:
  -}
 codeTable :: HuffmanTree -> Table Char BitCode
-codeTable = undefined
+codeTable Void = Table.empty
+codeTable (Node _ l r) = undefined
+codeTable (Leaf x y) = undefined
 
 
 {- encode h s
