@@ -26,6 +26,7 @@ type BitCode = [Bool]
              characterCountsAux "hej hopp" 'o' 0 == 1
 -}
 characterCountsAux :: String -> Char -> Int -> Int
+-- VARIANT: length lst
 characterCountsAux [] _ acc = acc
 characterCountsAux (x:xs) y acc | y == x = 1 + characterCountsAux xs y acc
                                 | otherwise = characterCountsAux xs y acc
@@ -39,6 +40,7 @@ characterCountsAux (x:xs) y acc | y == x = 1 + characterCountsAux xs y acc
              characterCounts "this is an example of a huffman tree" == T [('e',4),('r',1),('t',2),(' ',7),('n',2),('a',4),('m',2),('f',3),('u',1),('h',2),('o',1),('l',1),('p',1),('x',1),('s',2),('i',2)]
  -}
 characterCounts :: String -> Table Char Int
+-- VARIANT: length lst
 characterCounts [] = Table.empty
 characterCounts (x:xs) = Table.insert (characterCounts xs) x (characterCountsAux (x:xs) x 0)
 
@@ -95,7 +97,7 @@ mergeQ pq acc = let a = PriorityQueue.least
 -}
 sizeQ :: PriorityQueue HuffmanTree -> Int
 -- VARIANT: length of queue
-sizeQ pq = if is_empty (pq)
+sizeQ pq = if is_empty pq
             then 0
             else 1 + sizeQ (snd (PriorityQueue.least pq))
 
@@ -105,9 +107,11 @@ z = characterCounts "this is an example of a huffman tree"
 
 {- huffmanTree table
    Creates a HuffmanTree from a table.
-   PRE:  table maps each key to a positive value
+   PRE: table maps each key to a positive value
    RETURNS: a Huffman tree based on the character counts in table
-   EXAMPLES:
+   EXAMPLES: huffmanTree (characterCounts "") == Void
+             huffmanTree (characterCounts "xxx") == Leaf 'x' 3
+             huffmanTree (characterCounts "this is an example of a huffman tree") == Node 36 (Node 16 (Node 8 (Node 4 (Leaf 'i' 2) (Leaf 'm' 2)) (Node 4 (Leaf 'n' 2) (Node 2 (Leaf 'x' 1) (Leaf 'l' 1)))) (Node 8 (Node 4 (Leaf 's' 2) (Node 2 (Leaf 'r' 1) (Leaf 'u' 1))) (Leaf 'e' 4))) (Node 20 (Node 8 (Node 4 (Leaf 'h' 2) (Leaf 't' 2)) (Leaf 'a' 4)) (Node 12 (Node 5 (Node 2 (Leaf 'p' 1) (Leaf 'o' 1)) (Leaf 'f' 3)) (Leaf ' ' 7)))
  -}
 huffmanTree :: Table Char Int -> HuffmanTree
 huffmanTree t = if is_empty (priorityQ (Table.iterate t (\y x -> x : y) []))
