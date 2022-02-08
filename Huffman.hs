@@ -16,6 +16,7 @@ type BitCode = [Bool]
 -- END OF DO NOT MODIFY ZONE
 
 --------------------------------------------------------------------------------
+
 {- characterCountsAux str char acc
    Counts how many times a character occurs i a string.
    PRE: acc >= 0
@@ -32,8 +33,9 @@ characterCountsAux (x:xs) y acc | y == x = 1 + characterCountsAux xs y acc
                                 | otherwise = characterCountsAux xs y acc
 
 {- characterCounts s
+   Counts how many times every unique charachter occurs in a string.
    RETURNS: a table that maps each character that occurs in s to the number of
-         times the character occurs in s
+            times the character occurs in s
    EXAMPLES: characterCounts "" == T []
              characterCounts "xxx" == T [('x',3)]
              characterCounts "hej hopp" == T [('p',2),('o',1),('h',2),(' ',1),('j',1),('e',1)]
@@ -43,6 +45,7 @@ characterCounts :: String -> Table Char Int
 -- VARIANT: length lst
 characterCounts [] = Table.empty
 characterCounts (x:xs) = Table.insert (characterCounts xs) x (characterCountsAux (x:xs) x 0)
+
 
 
 {- HuffmanTree - full binary tree such that
@@ -118,13 +121,15 @@ huffmanTree t = if is_empty (priorityQ (Table.iterate t (\y x -> x : y) []))
                   then Void
                   else fst(fst(PriorityQueue.least (mergeQ (priorityQ (Table.iterate t (\y x -> x : y) []))(sizeQ (priorityQ (Table.iterate t (\y x -> x : y) []))))))
 
-{- codeTableAux
-   
+
+
+{- codeTableAux h char
+   Creates a bitcode list for a element in the tree
    PRE:
    RETURNS:
    EXAMPLES:
 -}
-codeTableAux :: HuffmanTree -> Bool -> BitCode
+codeTableAux :: HuffmanTree -> Char -> BitCode
 codeTableAux Void _ = []
 codeTableAux (Node _ l r) z = undefined
 codeTableAux (Leaf x y) z = undefined
@@ -134,9 +139,7 @@ codeTableAux (Leaf x y) z = undefined
    EXAMPLES:
  -}
 codeTable :: HuffmanTree -> Table Char BitCode
-codeTable Void = Table.empty
-codeTable (Node _ l r) = undefined
-codeTable (Leaf x y) = undefined
+codeTable = undefined
 
 
 {- encode h s
