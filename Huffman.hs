@@ -139,8 +139,10 @@ codeTableT (Leaf x y) z a = if x == z then a else []
 -}
 codeTableAux :: HuffmanTree -> Char -> BitCode
 codeTableAux Void _ = []
-codeTableAux (Node _ l r) z = undefined
-codeTableAux (Leaf x y) z = undefined
+codeTableAux (Node _ l r) z =
+                            | l.lookup z != void = false : codeTableAux l z
+                            | r.lookup z != void = true : codeTableAux r z
+codeTableAux (Leaf x y) z = []
 
 {- codeTable h
    RETURNS: a table that maps each character in h to its Huffman code
