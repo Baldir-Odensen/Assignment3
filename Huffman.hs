@@ -121,7 +121,15 @@ huffmanTree t = if is_empty (priorityQ (Table.iterate t (\y x -> x : y) []))
                   then Void
                   else fst(fst(PriorityQueue.least (mergeQ (priorityQ (Table.iterate t (\y x -> x : y) []))(sizeQ (priorityQ (Table.iterate t (\y x -> x : y) []))))))
 
-
+{- codeTableC h acc
+   Makes a list of the character in the specified tree
+   RETURNS: lst of chars from h
+   EXAMPLES:
+-}
+codeTableT :: HuffmanTree -> Char -> BitCode -> BitCode
+codeTableT Void _ _ = []
+codeTableT (Node _ l r) z a  = codeTableT l z [False] ++ a ++ codeTableT r z [True]
+codeTableT (Leaf x y) z a = if x == z then a else []
 
 {- codeTableAux h char
    Creates a bitcode list for a element in the tree
